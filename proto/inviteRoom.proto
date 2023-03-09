@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+option go_package = "github.com/IvanVojnic/bandEFnotif/proto";
+
+package inviteRoom;
+
+service inviteRoom {
+  rpc GetInvite(GetInviteRequest) returns (GetInviteResponse){}
+  rpc StorageInvite(StorageInviteRequest) returns (StorageInviteResponse){}
+}
+
+message GetInviteRequest {
+  string userID = 1;
+}
+
+message GetInviteResponse {
+  string userCreatorID = 1;
+  string roomID = 2;
+  string place = 3;
+  string date = 4;
+}
+
+message StorageInviteRequest {
+  string userCreatorID = 1;
+  string roomID = 2;
+  string place = 3;
+  string date = 4;
+}
+
+message StorageInviteResponse {
+
+}

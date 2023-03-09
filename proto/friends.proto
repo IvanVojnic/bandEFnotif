@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option go_package = "github.com/IvanVojnic/bandEFnotif/proto";
+
+package friends;
+
+service friends {
+  rpc GetFriendsRequest(GetFriendsRequestReq) returns (GetFriendsRequestResp){}
+}
+
+message GetFriendsRequestReq {
+  string userID = 1;
+}
+
+message GetFriendsRequestResp {
+  User userSender = 1;
+  User userReceiver = 2;
+}
+
+message User {
+  string userID = 1;
+  string userName = 2;
+  string userEmail = 3;
+}
