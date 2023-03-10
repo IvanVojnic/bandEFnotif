@@ -22,7 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FriendsClient interface {
-	GetFriendsRequest(ctx context.Context, in *GetFriendsRequestReq, opts ...grpc.CallOption) (*GetFriendsRequestResp, error)
+	StorageFriendsRequest(ctx context.Context, in *StorageFriendsRequestReq, opts ...grpc.CallOption) (*StorageFriendsRequestResp, error)
 }
 
 type friendsClient struct {
@@ -33,9 +33,9 @@ func NewFriendsClient(cc grpc.ClientConnInterface) FriendsClient {
 	return &friendsClient{cc}
 }
 
-func (c *friendsClient) GetFriendsRequest(ctx context.Context, in *GetFriendsRequestReq, opts ...grpc.CallOption) (*GetFriendsRequestResp, error) {
-	out := new(GetFriendsRequestResp)
-	err := c.cc.Invoke(ctx, "/friends.friends/GetFriendsRequest", in, out, opts...)
+func (c *friendsClient) StorageFriendsRequest(ctx context.Context, in *StorageFriendsRequestReq, opts ...grpc.CallOption) (*StorageFriendsRequestResp, error) {
+	out := new(StorageFriendsRequestResp)
+	err := c.cc.Invoke(ctx, "/friends.friends/StorageFriendsRequest", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +46,7 @@ func (c *friendsClient) GetFriendsRequest(ctx context.Context, in *GetFriendsReq
 // All implementations must embed UnimplementedFriendsServer
 // for forward compatibility
 type FriendsServer interface {
-	GetFriendsRequest(context.Context, *GetFriendsRequestReq) (*GetFriendsRequestResp, error)
+	StorageFriendsRequest(context.Context, *StorageFriendsRequestReq) (*StorageFriendsRequestResp, error)
 	mustEmbedUnimplementedFriendsServer()
 }
 
@@ -54,8 +54,8 @@ type FriendsServer interface {
 type UnimplementedFriendsServer struct {
 }
 
-func (UnimplementedFriendsServer) GetFriendsRequest(context.Context, *GetFriendsRequestReq) (*GetFriendsRequestResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetFriendsRequest not implemented")
+func (UnimplementedFriendsServer) StorageFriendsRequest(context.Context, *StorageFriendsRequestReq) (*StorageFriendsRequestResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method StorageFriendsRequest not implemented")
 }
 func (UnimplementedFriendsServer) mustEmbedUnimplementedFriendsServer() {}
 
@@ -70,20 +70,20 @@ func RegisterFriendsServer(s grpc.ServiceRegistrar, srv FriendsServer) {
 	s.RegisterService(&Friends_ServiceDesc, srv)
 }
 
-func _Friends_GetFriendsRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetFriendsRequestReq)
+func _Friends_StorageFriendsRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(StorageFriendsRequestReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FriendsServer).GetFriendsRequest(ctx, in)
+		return srv.(FriendsServer).StorageFriendsRequest(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/friends.friends/GetFriendsRequest",
+		FullMethod: "/friends.friends/StorageFriendsRequest",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FriendsServer).GetFriendsRequest(ctx, req.(*GetFriendsRequestReq))
+		return srv.(FriendsServer).StorageFriendsRequest(ctx, req.(*StorageFriendsRequestReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -96,8 +96,8 @@ var Friends_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*FriendsServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetFriendsRequest",
-			Handler:    _Friends_GetFriendsRequest_Handler,
+			MethodName: "StorageFriendsRequest",
+			Handler:    _Friends_StorageFriendsRequest_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
