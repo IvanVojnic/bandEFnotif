@@ -3,6 +3,7 @@ package rpc
 import (
 	"context"
 	"fmt"
+	"github.com/IvanVojnic/bandEFnotif/models"
 	"github.com/sirupsen/logrus"
 	"time"
 
@@ -12,7 +13,7 @@ import (
 
 // InviteRoom is an interface with implemented methods from Invite service
 type InviteRoom interface {
-	StorageInvite(ctx context.Context, roomID, userCreatorID uuid.UUID, place string, date time.Time) error
+	StorageInvite(ctx context.Context, roomID uuid.UUID, userCreator models.User, usersInvited []*models.User, place string, date time.Time) error
 }
 
 // InviteRoomServer used to define invite server obj
@@ -31,10 +32,6 @@ func NewInviteRoomServer(inviteServ InviteRoom) *InviteRoomServer {
 
 // StorageInvite used to storage invite by serv
 func (s *InviteRoomServer) StorageInvite(ctx context.Context, req *pr.StorageInviteRequest) (*pr.StorageInviteResponse, error) { // nolint:dupl, gocritic
-	userCreatorID, err := uuid.Parse(req.GetUserCreatorID())
-	if err != nil {
-		return &pr.StorageInviteResponse{}, fmt.Errorf("error while parsing user creator ID, %s", err)
-	}
 	roomID, err := uuid.Parse(req.GetRoomID())
 	if err != nil {
 		return &pr.StorageInviteResponse{}, fmt.Errorf("error while parsing room ID, %s", err)
@@ -46,7 +43,20 @@ func (s *InviteRoomServer) StorageInvite(ctx context.Context, req *pr.StorageInv
 		}).Errorf("error parsing date (send invite), %s", err)
 		return &pr.StorageInviteResponse{}, fmt.Errorf("error while parsing date, %s", err)
 	}
-	err = s.inviteServ.StorageInvite(ctx, roomID, userCreatorID, req.GetPlace(), date)
+	userCreatorID, err := uuid.Parse(req.UserCreator.UserID)
+	if err != nil {
+		return &pr.StorageInviteResponse{}, fmt.Errorf("error while parsing room ID, %s", err)
+	}
+	userCreator := models.User{ID: userCreatorID, Name: req.UserCreator.UserName, Email: req.UserCreator.UserEmail}
+	var users []*models.User
+	for _, userGRPC := range req.Users {
+		userID, errParseID := uuid.Parse(userGRPC.UserID)
+		if errParseID != nil {
+			return &pr.StorageInviteResponse{}, fmt.Errorf("error while parsing user invited ID, %s", errParseID)
+		}
+		users = append(users, &models.User{ID: userID, Name: userGRPC.UserName, Email: userGRPC.UserEmail})
+	}
+	err = s.inviteServ.StorageInvite(ctx, roomID, userCreator, users, req.GetPlace(), date)
 	if err != nil {
 		logrus.Errorf("error storage invite, %s", err)
 		return &pr.StorageInviteResponse{}, fmt.Errorf("error while storage invite, %s", err)
