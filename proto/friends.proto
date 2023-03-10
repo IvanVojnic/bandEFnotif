@@ -5,16 +5,16 @@ option go_package = "github.com/IvanVojnic/bandEFnotif/proto";
 package friends;
 
 service friends {
-  rpc GetFriendsRequest(GetFriendsRequestReq) returns (GetFriendsRequestResp){}
+  rpc StorageFriendsRequest(StorageFriendsRequestReq) returns (StorageFriendsRequestResp){}
 }
 
-message GetFriendsRequestReq {
-  string userID = 1;
-}
-
-message GetFriendsRequestResp {
+message StorageFriendsRequestReq {
   User userSender = 1;
   User userReceiver = 2;
+}
+
+message StorageFriendsRequestResp {
+
 }
 
 message User {
