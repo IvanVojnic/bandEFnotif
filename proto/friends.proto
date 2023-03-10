@@ -9,15 +9,15 @@ service friends {
 }
 
 message StorageFriendsRequestReq {
-  User userSender = 1;
-  User userReceiver = 2;
+  UserFriend userSender = 1;
+  UserFriend userReceiver = 2;
 }
 
 message StorageFriendsRequestResp {
 
 }
 
-message User {
+message UserFriend {
   string userID = 1;
   string userName = 2;
   string userEmail = 3;

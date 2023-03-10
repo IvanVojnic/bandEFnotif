@@ -21,12 +21,19 @@ message GetInviteResponse {
 }
 
 message StorageInviteRequest {
-  string userCreatorID = 1;
+  User userCreator = 1;
   string roomID = 2;
   string place = 3;
   string date = 4;
+  repeated User users = 5;
 }
 
 message StorageInviteResponse {
 
+}
+
+message User {
+  string userID = 1;
+  string userName = 2;
+  string userEmail = 3;
 }
